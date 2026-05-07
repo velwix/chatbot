@@ -45,7 +45,7 @@ export default {
         });
 
         // 4. Logotipni yuborish
-        const logoUrl = "https://store-88w.pages.dev/assets/PubgmUc-LD39Avrp.png"; // O'zingizning rasm linkini qo'ying
+        const logoUrl = "https://files.catbox.moe/j74g4z.jpg"; // O'zingizning rasm linkini qo'ying
         
         await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendPhoto`, {
           method: "POST",
