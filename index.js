@@ -37,7 +37,7 @@ export default {
 
         // 4. Logotipni (vw.logo.png) yuborish
         // Izoh: Rasm internetda ochiq manzilda (URL) bo'lishi kerak
-        const logoUrl = "https://store-88w.pages.dev/assets.logo.png"; // O'zingizning real rasm manzilingizni qo'ying
+        const logoUrl = "https://store-88w.pages.dev/assets/PubgmUc-LD39Avrp.png"; // O'zingizning real rasm manzilingizni qo'ying
         
         await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendPhoto`, {
           method: "POST",
