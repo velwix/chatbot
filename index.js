@@ -16,7 +16,7 @@ export default {
           const businessConnectionId = message.business_connection_id; // Biznes uchun muhim
 
           // Telegramga yuboriladigan javob matni
-          const replyText = `Salom! Men Cloudflare'da ishlaydigan botman. \nSiz yozdingiz: ${userText}`;
+          const replyText = `Salom! Men VelWix Tomonidan Ishlab Chiqarilgan botman🌐 vazifam Chatlarni avtomatlashtirish Va vaqtingizni tejash⏰️🪐⭐️. \nSiz yozdingiz: ${userText}`;
 
           // Telegram API'ga so'rov yuborish
           await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage`, {
