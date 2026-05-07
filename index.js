@@ -9,9 +9,9 @@ export default {
 
       const chatId = message.chat.id;
       const userText = message.text;
-      const busConnId = payload.business_connection_id || null;
+      const busConnId = payload.business_connection_id || (payload.business_message ? payload.business_message.business_connection_id : null);
 
-      // 1. "Typing" animatsiyasini tepada chiqarish
+      // 1. "Typing" holatini ko'rsatish
       await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendChatAction`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -22,34 +22,42 @@ export default {
         })
       });
 
-      // 2. "AI Javob bermoqda..." xabarini yuborish
+      // 2. Birinchi xabarni yuborish va xatoni tekshirish
       const initialRes = await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           chat_id: chatId,
-          text: "⏳ AI javob tayyorlamoqda...",
+          text: "⏳ VelWix AI javob tayyorlamoqda...",
           business_connection_id: busConnId
         })
       });
-      const initialMsg = await initialRes.json();
-      const messageId = initialMsg.result.message_id;
+      
+      const initialData = await initialRes.json();
+      
+      // Agar xabar yuborishda xato bo'lsa, logga yozamiz
+      if (!initialData.ok) {
+        console.error("Telegram Error (Initial):", initialData.description);
+        return new Response("OK");
+      }
 
-      // 3. AI dan javob olish (Gemma modelini sinab ko'ramiz - muqobil sifatida)
+      const messageId = initialData.result.message_id;
+
+      // 3. AI dan javob olish
       let aiReply = "";
       try {
-        const aiResponse = await env.AI.run('@cf/google/gemma-7b-it-lora', {
+        const aiResponse = await env.AI.run('@cf/mistral/mistral-7b-instruct-v0.1', {
           messages: [
-            { role: 'system', content: 'Siz VelWix yordamchisiz. O\'zbek tilida qisqa javob bering.' },
+            { role: 'system', content: 'Siz VelWix aqlli yordamchisiz. O\'zbek tilida qisqa javob bering.' },
             { role: 'user', content: userText }
           ]
         });
         aiReply = aiResponse.response;
       } catch (e) {
-        aiReply = "Kechirasiz, tizimda yuklama yuqori.";
+        aiReply = "Hozircha tizimda yuklama yuqori, javob bera olmayman.";
       }
 
-      // 4. O'sha xabarni tahrirlash (AI javobini ko'rsatish)
+      // 4. Xabarni tahrirlash
       await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/editMessageText`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -61,8 +69,8 @@ export default {
         })
       });
 
-      // 5. Logotipni yuborish
-      const logoUrl = "https://raw.githubusercontent.com/VelWix/assets/main/vw.logo.png";
+      // 5. Rasm yuborish
+      const logoUrl = "https://files.catbox.moe/j74g4z.jpg";
       await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendPhoto`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -74,8 +82,9 @@ export default {
       });
 
     } catch (err) {
-      console.error(err);
+      console.error("Global Catch:", err.message);
     }
     return new Response("OK");
   }
 };
+
