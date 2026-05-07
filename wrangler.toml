@@ -1,4 +1,4 @@
-name = "chatbot"
+name = "vchatbot"
 main = "index.js"
 compatibility_date = "2024-05-01"
 
