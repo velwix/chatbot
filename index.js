@@ -1,7 +1,7 @@
 export default {
   async fetch(request, env) {
     if (request.method !== "POST") {
-      return new Response("VelWix AI Bot is active!", { status: 200 });
+      return new Response("VelWix AI Bot is active!");
     }
 
     try {
@@ -13,18 +13,27 @@ export default {
         const userText = message.text;
         const busConnId = payload.business_connection_id || (payload.business_message ? payload.business_message.business_connection_id : null);
 
-        // 1. AI ga so'rov yuborish
-        const aiResponse = await env.AI.run('@cf/meta/llama-3-8b-instruct', {
-          messages: [
-            { role: 'system', content: 'Siz VelWix loyihasining aqlli yordamchisiz. O\'zbek tilida qisqa, aniq va xushmuomala javob bering.' },
-            { role: 'user', content: userText }
-          ]
-        });
+        console.log("AI ishga tushmoqda...");
 
-        // 2. AI javobiga majburiy matnni qo'shish
-        const finalReply = `${aiResponse.response}\n\nVelWix🪐🌠`;
+        // 1. AI ga so'rov (Llama-3 modelidan foydalanamiz)
+        let aiText = "";
+        try {
+          const aiResponse = await env.AI.run('@cf/meta/llama-3-8b-instruct', {
+            messages: [
+              { role: 'system', content: 'Siz VelWix loyihasining aqlli yordamchisiz. O\'zbek tilida qisqa javob bering.' },
+              { role: 'user', content: userText }
+            ]
+          });
+          aiText = aiResponse.response;
+        } catch (aiErr) {
+          console.error("AI Xatosi:", aiErr.message);
+          aiText = "Hozircha javob bera olmayman, texnik nosozlik.";
+        }
 
-        // 3. Matnli xabarni yuborish
+        // 2. AI javobi + Majburiy matn
+        const finalReply = `${aiText}\n\nVelWix🪐🌠`;
+
+        // 3. Matnni yuborish
         await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -35,9 +44,8 @@ export default {
           }),
         });
 
-        // 4. Logotipni (vw.logo.png) yuborish
-        // Izoh: Rasm internetda ochiq manzilda (URL) bo'lishi kerak
-        const logoUrl = "https://store-88w.pages.dev/assets/PubgmUc-LD39Avrp.png"; // O'zingizning real rasm manzilingizni qo'ying
+        // 4. Logotipni yuborish
+        const logoUrl = "https://raw.githubusercontent.com/VelWix/assets/main/vw.logo.png"; // O'zingizning rasm linkini qo'ying
         
         await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendPhoto`, {
           method: "POST",
@@ -50,10 +58,10 @@ export default {
         });
       }
 
-      return new Response("OK", { status: 200 });
+      return new Response("OK");
     } catch (e) {
-      console.error("Xato yuz berdi:", e.message);
-      return new Response("Error", { status: 200 });
+      console.error("Umumiy xato:", e.message);
+      return new Response("OK");
     }
   },
 };
