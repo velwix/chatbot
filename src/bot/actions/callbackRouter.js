@@ -2,6 +2,7 @@ import AI from "../CallbackQuery/AI.js";
 import AI_YES from "../CallbackQuery/AI_YES.js";
 import AI_NO from "../CallbackQuery/AI_NO.js";
 import checkSub from "../CallbackQuery/checkSub.js";
+import tg from "../services/tg.connect.js";
 
 export default async function callbackRouter(ctx, env) {
 
@@ -23,4 +24,9 @@ export default async function callbackRouter(ctx, env) {
     return checkSub(ctx, env);
   }
 
+  // Noma'lum tugma bosilsa
+  return await tg(env, "answerCallbackQuery", {
+    callback_query_id: ctx.id,
+    text: "Noma'lum buyruq"
+  });
 }
