@@ -3,16 +3,8 @@ import checkSubscription from "../services/vw.connect.js";
 
 export default async function checkSub(ctx, env) {
 
-  const chat_id = ctx.message?.chat?.id;
   const user_id = ctx.from?.id;
-
-  if (!chat_id || !user_id) {
-    return await tg(env, "answerCallbackQuery", {
-      callback_query_id: ctx.id,
-      text: "Xatolik yuz berdi",
-      show_alert: true
-    });
-  }
+  const chat_id = ctx.message?.chat?.id;
 
   const channelRow = await env.DB.prepare(
     "SELECT username FROM channels LIMIT 1"
@@ -34,13 +26,13 @@ export default async function checkSub(ctx, env) {
   if (isJoined) {
     await tg(env, "answerCallbackQuery", {
       callback_query_id: ctx.id,
-      text: "✅ Obuna tasdiqlandi! Botdan foydalanishingiz mumkin.",
+      text: "✅ Obuna tasdiqlandi!",
       show_alert: true
     });
   } else {
     await tg(env, "answerCallbackQuery", {
       callback_query_id: ctx.id,
-      text: "❌ Hali obuna bo'lmadingiz! Iltimos kanalga obuna bo'ling.",
+      text: "❌ Hali obuna bo'lmadingiz!",
       show_alert: true
     });
   }
