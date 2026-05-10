@@ -1,12 +1,10 @@
 name = "my-telegram-bot"
-main = "index.js"
+main = "src/index.js"
 compatibility_date = "2024-01-01"
 
 [vars]
-# Bu yerda o'zgarmas tekstli o'zgaruvchilar bo'lishi mumkin
-# Lekin maxfiy TOKEN'larni Dashboard'dan qo'shgan ma'qul
 
 [[d1_databases]]
-binding = "DB" # Kod ichida env.DB ko'rinishida ishlatiladi
+binding = "DB" 
 database_name = "tg-chatbot"
 database_id = "14120964-24e4-425b-969e-f28f74ac1c1e"
