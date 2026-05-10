@@ -14,17 +14,19 @@ export default async function checkSubscription(env, user_id, channels = []) {
     })
   });
 
-  const data = await res.json();
+  const text = await res.text();
 
-  if (data?.status !== "success") {
+  let data;
+
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
     return {
       ok: false,
+      error: text,
       results: {}
     };
   }
 
-  return {
-    ok: true,
-    results: data.results || {}
-  };
+  return data;
 }
