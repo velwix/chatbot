@@ -62,37 +62,44 @@ export default async function start(ctx, env) {
           [
             { 
               text: getLabel('guide_status', "Qo'llanma", "📒"), 
-              callback_data: "guide" 
+              callback_data: "guide"
+              style: "primary" 
             }
           ],
           [
             { 
               text: getLabel('auto_msg_status', "Avto xabar", "📧"), 
-              callback_data: "auto_msg" 
+              callback_data: "auto_msg"
+ style: "primary" 
             },
             { 
               text: getLabel('keyword_status', "Kalit so'z", "🔑"), 
-              callback_data: "keyword" 
+              callback_data: "keyword"
+style: "primary" 
             }
           ],
           [
             { 
               text: getLabel('ai_status', "AI", "🌀"), 
               callback_data: "ai" 
+style: "primary"
             },
             { 
               text: getLabel('typing_anim_status', "Yozish Animatsiya", "🌠"), 
               callback_data: "typing_anim" 
+style: "primary"
             }
           ],
           [
             { 
               text: getLabel('limit_status', "Cheklov", "🔒"), 
               callback_data: "limit" 
+style: "primary"
             },
             { 
               text: getLabel('time_status', "Soat", "🕚"), 
               callback_data: "time" 
+style: "primary"
             }
           ]
         ]
