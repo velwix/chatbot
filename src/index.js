@@ -7,46 +7,51 @@ export default {
     const url = new URL(req.url);
 
     
-    if (url.pathname === "/webhook-set") {
-      const setUrl = `https://api.telegram.org/bot${env.BOT_TOKEN}/setWebhook`;
+    if (url.pathname === "/set-webhook") {
+      const webhookUrl = `${env.BASE_URL}/webhook`;
 
-      const res = await fetch(setUrl, {
+      const res = await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/setWebhook`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          url: `${env.BASE_URL}/webhook`
+          url: webhookUrl,
+          allowed_updates: ["message", "callback_query"]
         })
       });
 
-      return new Response(await res.text());
+      const result = await res.json();
+      return new Response(JSON.stringify(result, null, 2));
     }
 
     
     if (url.pathname === "/webhook") {
+      const update = await req.json().catch(() => null);
 
-      const update = await req.json();
+      if (!update) {
+        return new Response("OK");
+      }
 
-      
-      if (update.message) {
+      try {
+        if (update.message) {
+          const text = update.message.text;
 
-        const text = update.message.text;
-
-        if (text === "/start") {
-          return start(update.message, env);
+          if (text === "/start") {
+            await start(update.message, env);   // await qo'shildi
+          }
         }
 
+        if (update.callback_query) {
+          await callbackRouter(update.callback_query, env);   
+        }
+
+      } catch (err) {
+        console.error(err);
       }
 
       
-      if (update.callback_query) {
-        return callbackRouter(update.callback_query, env);
-      }
-
-      return new Response("ok");
+      return new Response("OK");
     }
 
-    return new Response("not found", { status: 404 });
+    return new Response("Not found", { status: 404 });
   }
 };
