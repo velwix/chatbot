@@ -1,4 +1,5 @@
-export async function getMainMenu(env, user_id) {
+export const mainMenu = {
+  (env, user_id) {
   const settings = await env.DB.prepare(
     "SELECT auto_msg, keyword, ai, reply FROM user_settings WHERE user_id = ?"
   ).bind(user_id).first() || { auto_msg: 'off', keyword: 'off', ai: 'off', reply: 'off' };
