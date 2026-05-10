@@ -6,9 +6,7 @@ export default async function ad(ctx, env) {
 
   const chat_id = ctx.chat.id;
   const user_id = ctx.from.id;
-  const text = ctx.text || "";
 
-  // Admin tekshirish
   if (user_id !== ADMIN_ID) {
     return await tg(env, "sendMessage", {
       chat_id,
@@ -16,25 +14,23 @@ export default async function ad(ctx, env) {
     });
   }
 
-  // Format: name=Test Kanal&username=@testchannel
-  if (!text.includes("name=") || !text.includes("username=")) {
+  const text = ctx.text || "";
+
+  // Parametrlarni olish
+  const match = text.match(/name=(.+?)&username=(.+)/);
+  
+  if (!match) {
     return await tg(env, "sendMessage", {
       chat_id,
-      text: "❌ Noto'g'ri format!\n\nTo'g'ri format:\n`name=Kanal Nomi&username=@username`",
+      text: "❌ Noto'g'ri format!\n\nTo'g'ri ishlatish:\n`/ad name=VelWix&username=@VelWix_Ch`",
       parse_mode: "Markdown"
     });
   }
 
+  const name = match[1].trim();
+  const username = match[2].trim();
+
   try {
-    const params = new URLSearchParams(text.split(' ').slice(1).join(' '));
-    const name = params.get("name");
-    const username = params.get("username");
-
-    if (!name || !username) {
-      throw new Error("Parametrlar to'liq emas");
-    }
-
-    // DB ga qo'shish
     await env.DB.prepare(`
       INSERT INTO channels (name, username)
       VALUES (?, ?)
@@ -49,9 +45,10 @@ export default async function ad(ctx, env) {
     });
 
   } catch (error) {
+    console.error(error);
     return await tg(env, "sendMessage", {
       chat_id,
-      text: "❌ Xatolik yuz berdi!\n\nTo'g'ri formatdan foydalaning:\n`name=Kanal Nomi&username=@username`"
+      text: "❌ Ma'lumotlar bazasiga qo'shishda xatolik yuz berdi."
     });
   }
 }
