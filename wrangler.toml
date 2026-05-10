@@ -6,6 +6,8 @@ compatibility_date = "2024-01-01"
 
 BOT_TOKEN = "8626138769:AAEqfYqlKrYONr6XWhU3QzletUx-jGyUwQs"
 API_KEY = "velwix:fK8aQ2mZ9pL7xT4vN6sR1bY0cD3eW5hJ"
+SUPABASE_URL = "https://xnptaohjojujtujuvnsa.supabase.co"
+SUPABASE_KEY = "sb_publishable_ubogU2uRm5jhWAQvldoqdA_dTKHU_1h"
 
 [[d1_databases]]
 binding = "DB" 
