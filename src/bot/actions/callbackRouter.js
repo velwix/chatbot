@@ -2,7 +2,7 @@ import AI from "../CallbackQuery/AI.js";
 import AI_YES from "../CallbackQuery/AI_YES.js";
 import AI_NO from "../CallbackQuery/AI_NO.js";
 
-export default async function callbackRouter(ctx, tg, env) {
+export default async function callbackRouter(ctx, env) {
 
   const data = ctx.data;
 
@@ -18,4 +18,5 @@ export default async function callbackRouter(ctx, tg, env) {
     return AI_NO(ctx, env);
   }
 
+  // Qo'shimcha callbacklar kelganda shu yerga qo'shishingiz mumkin
 }
