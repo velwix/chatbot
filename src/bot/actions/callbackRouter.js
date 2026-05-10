@@ -1,6 +1,7 @@
 import AI from "../CallbackQuery/AI.js";
 import AI_YES from "../CallbackQuery/AI_YES.js";
 import AI_NO from "../CallbackQuery/AI_NO.js";
+import checkSub from "../CallbackQuery/checkSub.js";
 
 export default async function callbackRouter(ctx, env) {
 
@@ -18,5 +19,8 @@ export default async function callbackRouter(ctx, env) {
     return AI_NO(ctx, env);
   }
 
-  // Qo'shimcha callbacklar kelganda shu yerga qo'shishingiz mumkin
+  if (data === "check_sub") {
+    return checkSub(ctx, env);
+  }
+
 }
