@@ -13,7 +13,6 @@ export const tgConnect = (token) => {
   return {
     sendMessage: (chat_id, text, options = {}) => 
       call('sendMessage', { chat_id, text, ...options }),
-    
     request: (method, payload) => call(method, payload)
   };
 };
