@@ -1,5 +1,5 @@
 import tg from "../services/tg.connect.js";
-import checkSub from "../CallbackQuery/checkSub.js";
+import checkSub from "../CallbackQuery/CheckSub.js";
 import AI from "../CallbackQuery/AI.js";
 import AI_YES from "../CallbackQuery/AI_YES.js";
 import AI_NO from "../CallbackQuery/AI_NO.js";
