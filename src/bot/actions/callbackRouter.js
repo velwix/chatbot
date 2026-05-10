@@ -1,8 +1,10 @@
 import { telegram } from "../services/tg.connect.js";
-import checkSub from "../CallbackQuery/CheckSub.js";
 import start from "../Commands/start.js";
+import checkSub from "../CallbackQuery/CheckSub.js";
 import guide from "../CallbackQuery/guide.js";
 import autoMessage from "../CallbackQuery/AutoMessage.js";
+import addAutoMessage from "../CallbackQuery/AddAutoMessage.js";
+import editAutoMessage from "../CallbackQuery/EditAutoMessage.js"; 
 import AI from "../CallbackQuery/AI.js";
 import AI_YES from "../CallbackQuery/AI_YES.js";
 import AI_NO from "../CallbackQuery/AI_NO.js";
@@ -27,6 +29,14 @@ export default async function callbackRouter(ctx, env) {
 
     case "auto_msg":
       await autoMessage(ctx, env);
+      break;
+
+    case "add_auto_msg":
+      await addAutoMessage(ctx, env);
+      break;
+
+    case "edit_auto_msg":
+      await editAutoMessage(ctx, env);
       break;
 
     case "back_to_menu":
