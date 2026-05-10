@@ -1,7 +1,7 @@
 import { telegram } from "./bot/services/tg.connect.js";
 import { getDb } from "./bot/database/db.connect.js";
 import start from "./bot/commands/start.js";
-import callbackRouter from "./bot/actions/CallbackRouter.js";
+import callbackRouter from "./bot/actions/callbackRouter.js";
 import textHandler from "./bot/commands/textHandler.js";
 
 export default {
