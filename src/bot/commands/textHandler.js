@@ -23,12 +23,12 @@ export default async function textHandler(ctx, env) {
       auto_msg: true 
     }).eq('user_id', user_id);
 
-    const info = await bot.sendMessage(chat_id, "Xabar muvaffaqiyatli saqlandi!✅");
+    const tempMsg = await bot.sendMessage(chat_id, "Xabar muvaffaqiyatli yangilandi!✅");
     
-    setTimeout(async () => {
-      await bot.deleteMessage(chat_id, info.result.message_id);
-    }, 2000);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    await bot.deleteMessage(chat_id, tempMsg.result.message_id);
 
     return await start(ctx, env);
   }
 }
+
