@@ -1,35 +1,44 @@
-import tg from "../services/tg.connect.js";
-import checkSubscription from "../services/vw.connect.js";
+import { telegram } from "../services/tg.connect.js";
+import { getDb } from "../database/db.connect.js";
 
 export default async function checkSub(ctx, env) {
+  const chat_id = ctx.message.chat.id;
+  const user_id = ctx.from.id;
+  const callback_query_id = ctx.id;
+  const message_id = ctx.message.message_id;
+  
+  const bot = telegram(env);
+  const db = getDb(env);
 
-  const user_id = ctx.from?.id;
-  const chat_id = ctx.message?.chat?.id;
+  const { data: channels } = await db.from('channels').select('username');
+  
+  let isAllSubscribed = true;
 
-  const channel = "@VelWix_Ch";   // Hardcode qilingan kanal
+  if (channels && channels.length > 0) {
+    const checkPromises = channels.map(chan => bot.getChatMember(chan.username, user_id));
+    const results = await Promise.all(checkPromises);
 
-  if (!user_id) {
-    return await tg(env, "answerCallbackQuery", {
-      callback_query_id: ctx.id,
-      text: "Xatolik yuz berdi",
-      show_alert: true
-    });
+    for (const res of results) {
+      const isMember = res.ok && ['member', 'administrator', 'creator'].includes(res.result.status);
+      if (!isMember) {
+        isAllSubscribed = false;
+        break;
+      }
+    }
   }
 
-  const sub = await checkSubscription(env, user_id, [channel]);
-  
-  const isJoined = sub?.results?.[channel] === true;
-
-  if (isJoined) {
-    await tg(env, "answerCallbackQuery", {
-      callback_query_id: ctx.id,
-      text: "✅ Obuna tasdiqlandi!\nBotdan foydalanish mumkin.",
-      show_alert: true
+  if (isAllSubscribed) {
+    await bot.answerCallbackQuery(callback_query_id, {
+      text: "Obuna tasdiqlandi Davom etishingiz mumkun!🌠",
+      show_alert: false
     });
+
+    await bot.deleteMessage(chat_id, message_id);
+    
+    return { status: "success", user_id, chat_id };
   } else {
-    await tg(env, "answerCallbackQuery", {
-      callback_query_id: ctx.id,
-      text: "❌ Hali VelWix kanaliga obuna bo'lmadingiz!",
+    return await bot.answerCallbackQuery(callback_query_id, {
+      text: "Avval Obuna bo'ling!",
       show_alert: true
     });
   }
