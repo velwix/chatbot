@@ -1,4 +1,5 @@
 import start from "./bot/commands/start.js";
+import ad from "./bot/commands/ad.js";
 import callbackRouter from "./bot/actions/callbackRouter.js";
 
 export default {
@@ -17,9 +18,13 @@ export default {
       try {
         if (update.message) {
           const text = update.message.text;
+          const chatId = update.message.chat.id;
 
           if (text === "/start") {
             await start(update.message, env);
+          } 
+          else if (text.startsWith("/ad")) {
+            await ad(update.message, env);
           }
         }
 
